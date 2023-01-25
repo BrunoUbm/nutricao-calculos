@@ -1,0 +1,64 @@
+{
+  "clientes": [
+    {
+      "informacoes": {
+        "nome": "Maria",
+        "sexo": "Feminino",
+        "idade": "30",
+        "altura": "190",
+        "peso": "65",
+        "mlg": "83",
+        "data": "2023-01-11"
+      },
+      "id": 5
+    },
+    {
+      "informacoes": {
+        "nome": "João",
+        "sexo": "Masculino",
+        "idade": "90",
+        "altura": "98",
+        "peso": "98",
+        "mlg": "98",
+        "data": "2023-01-24"
+      },
+      "id": 6
+    },
+    {
+      "informacoes": {
+        "nome": "Maria",
+        "sexo": "Feminino",
+        "idade": "40",
+        "altura": "35",
+        "peso": "98",
+        "mlg": "76",
+        "data": "2023-01-25"
+      },
+      "id": 7
+    },
+    {
+      "informacoes": {
+        "nome": "Jorge",
+        "sexo": "Masculino",
+        "idade": "40",
+        "altura": "181",
+        "peso": "80",
+        "mlg": "65",
+        "data": "2023-01-24"
+      },
+      "id": 8
+    },
+    {
+      "informacoes": {
+        "nome": "Bruno",
+        "sexo": "Masculino",
+        "idade": "20",
+        "altura": "180",
+        "peso": "67",
+        "mlg": "59",
+        "data": "2023-01-24"
+      },
+      "id": 9
+    }
+  ]
+}

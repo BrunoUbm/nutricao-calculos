@@ -1,6 +1,7 @@
 <template>
     
     <body>
+        <HeaderOptions />
         <div class="principal">
             <div class="informacoes">
                 <form>
@@ -11,7 +12,8 @@
                     <input type="text" v-model="peso" placeholder="Digite seu peso">
                     <input type="text" v-model="altura" placeholder="Digite sua altura">
                     <input type="text" v-model="mlg" placeholder="Massa livre de gordura">
-                    <button class="calcular" @click="CalculoTmd">Calcular</button>
+                    <input type="date" v-model="data">
+                    <button class="button-enviar" @click="CalculoTmd">Calcular</button>
                     <div class="cadastro" v-if="cadastro === true">
                         <p>Cliente: {{ nome }}</p>
                         <p>Sexo: {{ sexo }}</p>
@@ -20,7 +22,7 @@
                         <p>Altura: {{ altura }} m</p>
                         <p>MLG: {{ mlg }}</p>
                     </div>
-                    <button class="reset" @click="ResetCadastro" v-if="cadastro === true">Reset</button>
+                    <button class="button-resetar" @click="ResetCadastro" v-if="cadastro === true">Reset</button>
                 </form>
             </div>
             <div class="results" v-if="cadastro === true">
@@ -51,6 +53,7 @@
                         <h2 v-if="sexo === 'Feminino' || sexo === 'Masculino'"><span>Tinslay(MLG): </span>{{ tinslaymlg }}</h2>
                     </div>
                 </div>
+                <button class="save-data" @click="SalvarDados">Salvar Resultados</button>
             </div>
         </div>
     </body>
@@ -61,6 +64,8 @@
 </style>
 
 <script>
+import axios from 'axios'
+import HeaderOptions from './partials/HeaderOptions.vue'
 export default{
     data(){
         return{
@@ -70,6 +75,7 @@ export default{
             altura: null,
             sexo: null,
             mlg: null,
+            data: null,
             female_result_harris: null,
             male_result_harris: null,
             female_result_fao: null,
@@ -81,6 +87,9 @@ export default{
             tinslaymlg: null,
             cadastro: false
         }
+    },
+    components: {
+        HeaderOptions
     },
     methods: {
         CalculoTmd(a){
@@ -159,7 +168,20 @@ export default{
                     break;
             }
 
+            const PreventErrors = () => {
+                if (this.sexo != 'Masculino' && this.sexo != 'Feminino') {
+                    this.cadastro = false
+                    alert('Digite o sexo corretamente')
+                }
+                else {
+                    this.cadastro = true
+                }
+
+            }
+            PreventErrors()
+
         },
+
         ResetCadastro(){
             this.cadastro = false
             this.nome = null
@@ -168,24 +190,40 @@ export default{
             this.peso = null
             this.altura = null
             this.mlg = null
-        }
+            this.data = null
+        },
 
+        SalvarDados() {
+            const data = {
+                informacoes: {
+                    nome: this.nome,
+                    sexo: this.sexo,
+                    idade: this.idade,
+                    altura: this.altura,
+                    peso: this.peso,
+                    mlg: this.mlg,
+                    data: this.data
+                }
+            }
+            
+            axios.post('http://localhost:3000/clientes', data)
+            .then((response) => {
+                alert('Dados salvos com sucesso!')
+                return response
+            })
+            .catch((err) => {
+                console.log(err);
+            })
 
-
+            this.ResetCadastro()
     }
+}
 }
 
 </script>
 
-<style>
-*{
-    margin: 0px;
-    padding: 0px;
-}
+<style scoped>
 
-body{
-    background-color: rgb(0, 130, 67);
-}
 
 .principal{
     display: flex;
@@ -197,7 +235,7 @@ form{
     flex-direction: column;
     width: 50vh;
     padding: 20px;
-    background-color: rgb(0, 5, 26, 0.7);
+    background-color: rgba(47, 1, 62, 0.7);
     border-radius: 10px;
 }
 h1{
@@ -209,6 +247,9 @@ h1{
 input{
     padding: 10px 20px;
     font-size: 25px;
+    color: white;
+    border-color: black;
+    background: rgb(48, 0, 66);
 }
 
 p{
@@ -218,12 +259,14 @@ p{
 
 h2{
     font-size: 45px;
+    box-shadow: 0px 10px 40px -12px #00ff8052;
+    border-radius: 10px;
 }
 
 .calcular{
     border: none;
     color: white;
-    background-color: rgb(60, 255, 0);
+    color: rgb(43, 0, 64);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     margin-bottom: 10px;
@@ -232,28 +275,45 @@ h2{
     color: white;
     width: 100%;
     margin: auto 50px;
-    background-color: rgb(0, 5, 26, 0.7);
+    background-color: rgba(29, 0, 38, 0.7);
     border-radius: 10px;
 }
 
-button{
+.button-enviar{
     border: none;
     padding: 10px 20px;
-    color: white;
-    background-color: rgb(60, 255, 0);
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    color: rgb(43, 0, 64);
+    background: #00ff88;
+    border-radius: 10px;
+    font-size: 25px;
+}
+.button-resetar{
+    border: none;
+    padding: 10px 20px;
+    color: rgb(43, 0, 64);
+    background: #00ff88;
+    border-radius: 10px;
+    font-size: 25px;
+}
+.save-data{
+    border: none;
+    width: 100%;
+    padding: 10px 20px;
+    color: rgb(43, 0, 64);
+    background: #00ff88;
+    border-radius: 10px;
     font-size: 25px;
 }
 
-.calcular:hover{
-    background-color: rgb(0, 200, 7);
-    box-shadow: 5px 5px 5px rgb(60, 255, 0);
+button{
+    cursor: pointer;
 }
 
 button:hover{
-    background-color: rgb(0, 200, 7);
-    box-shadow: 5px 5px 5px rgb(60, 255, 0);
+    box-shadow: 0px 10px 40px -12px #00ff8052;
+    transform: scale(1.01);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 
@@ -267,7 +327,7 @@ button:hover{
     padding: 7vh;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    background-color: rgb(0, 5, 26, 0.7);
+    background-color: rgba(29, 0, 38, 0.7);
     color: white;
 }
 
